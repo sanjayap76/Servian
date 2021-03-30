@@ -4,10 +4,24 @@ variable "ami" {
   default     = "ami-0b3d7a5ecc2daba4c"
 }
 
+variable "env" {
+  type    = string
+  default = "dev"
+}
+
+variable "name" {
+  type    = string
+  default = "backend"
+}
+
 variable "instance_size" {
   description = "Instance Size"
   type        = string
   default     = "t3a.micro"
+}
+
+variable "subnet_id" {
+  type = string
 }
 
 variable "root_disksize" {

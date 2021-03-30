@@ -3,19 +3,19 @@ provider "aws" {
 }
 
 module "prod_vpc" {
-  source   = "../modules/aws_network"
-  env      = "prod"
-  vpc_cidr = "10.2.0.0/16"
-  public_subnets = {
-    ap-southeast-2a = "10.2.0.0/24",
-    ap-southeast-2b = "10.2.128.0/24"
-  }
-  private_backend_subnets = {
-    ap-southeast-2a = "10.1.32.0/24",
-    ap-southeast-2b = "10.1.160.0/24"
-  }
-  private_db_subnets = {
-    ap-southeast-2a = "10.1.64.0/24",
-    ap-southeast-2b = "10.1.192.0/24"
-  }
+  source                  = "../modules/aws_network"
+  env                     = var.env
+  vpc_cidr                = var.vpc_cidr
+  public_subnets          = var.public_subnets
+  private_backend_subnets = var.private_backend_subnets
+  private_db_subnets      = var.private_db_subnets
+}
+
+module "backend_server" {
+  source        = "../modules/aws_server"
+  env           = "prod"
+  name          = "backend-01"
+  subnet_id     = module.prod_vpc.private_backend_subnet_ids[var.private_backend_subnets["ap-southeast-2a"]]
+  root_disksize = "20"
+  depends_on    = [module.prod_vpc]
 }
